@@ -21,7 +21,7 @@ trait ConfigLowPrio {
         val vv: VType[FieldType[K, V]] = for {
           either <- conf.get(c, witness.value.name)
           any <- VType.checkRight(either, s"Expected a value at '${witness.value.name}' but found a config '${either.left.get}'")
-          value <- VType.fromOption(typeable.cast(any), s"'$any' could not be cast as '${typeable.describe}")
+          value <- VType.fromOption(typeable.cast(any), s"'$any' could not be cast as '${typeable.describe}'")
         } yield field[K](value)
 
         val tv: VType[T] = parserT.value(c)
