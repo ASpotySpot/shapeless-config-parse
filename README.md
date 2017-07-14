@@ -34,7 +34,7 @@ println(result.right.get) //A(3, B("hello"), true)
 The failure case
 ```
 //conf file contains {a: 3, b:{badkey: "hello"}, c: "bad-type"} 
-val conf: Config = ConfigFactory.parseFile(new File("src/test/resources/my-conf.config"))
+val conf: Config = ConfigFactory.parseFile(new File("src/test/resources/bad-conf.config"))
 val result = ConfigParser[A](conf)
 result.left.get.foreach(println)
 //Could not find key 'aa' in 'Config(SimpleConfigObject({"bad-key":"hello"}))'
