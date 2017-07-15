@@ -1,6 +1,6 @@
-package parser.core
+package parser
 
-import VType.VType
+import parser.VType.VType
 
 trait Conf[N] {
   def get(n: N, key: String): VType[Either[N, Any]]
