@@ -5,6 +5,7 @@ import java.util.Properties
 import com.typesafe.config.Config
 
 import scala.collection.JavaConverters.asScalaSet
+import scala.xml.{Elem, Node, NodeSeq}
 
 trait Reader[A] {
   def read(a: A): Nested
@@ -52,5 +53,22 @@ object Reader {
       }
     }
     c => innerParse(keySet, 0, c)
+  }
+
+  implicit val xmlReader = new Reader[Node] {
+    override def read(a: Node): Nested = {
+      val (valueNodes, nestedNodes) = a.child.filter(goodNode).partition(_.child.length == 1)
+      val values = valueNodes.map(n => n.label -> Value(n.text)).toMap
+      val nested = nestedNodes.map(ns => ns.label -> read(ns.head)).toMap
+      val r = Nested(values ++ nested)
+      r.filterKeys(goodNode)
+    }
+
+    private def goodNode(n: Node): Boolean = {
+      goodNode(n.label)
+    }
+    private def goodNode(k: String): Boolean = {
+      k.nonEmpty && !k.contains('#')
+    }
   }
 }
